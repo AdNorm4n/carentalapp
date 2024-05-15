@@ -75,85 +75,58 @@ class _LoginPageState extends State<LoginPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 50),
-
-                // logo
-                Icon(
-                  Icons.lock_open_rounded,
-                  size: 80,
-                  color: Theme.of(context).colorScheme.inversePrimary,
-                ),
-
-                const SizedBox(height: 50),
-
-                // message, app slogan
-                Text(
-                  "Welcome to GoRent",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Theme.of(context).colorScheme.inversePrimary,
+                const SizedBox(height: 20),
+                Container(
+                  height: 200,
+                  width: 200,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(200),
+                    color: Theme.of(context).colorScheme.background,
+                  ),
+                  child: Image.asset(
+                    'lib/images/logo/gorent.png',
+                    fit: BoxFit.fill,
                   ),
                 ),
 
                 const SizedBox(height: 25),
 
-                // email textfield
                 Textfields(
                   controller: emailController,
                   hintText: "Email",
                   obscureText: false,
                 ),
-
                 const SizedBox(height: 10),
-
-                // password textfield
                 Textfields(
                   controller: passwordController,
                   hintText: "Password",
                   obscureText: true,
                 ),
-
                 const SizedBox(height: 10),
-
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 25.0),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
                       GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context, 
-                            MaterialPageRoute(
-                              builder: (context) {
-                              return ForgotPasswordPage();
-                            },
-                          ),
-                         );
-                        },
+                        onTap: forgotPw,
                         child: Text(
                           'Forgot Password',
                           style: TextStyle(
-                          color: Theme.of(context).colorScheme.inversePrimary,
-                          fontWeight: FontWeight.bold,
+                            color: Theme.of(context).colorScheme.tertiary,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                                             ),
                       ),
                     ],
                   ),
                 ),
-
                 const SizedBox(height: 10),
-
-                // sign in button
                 Buttons(
                   text: "Login",
                   onTap: login,
                 ),
-
                 const SizedBox(height: 10),
-
-                // don't have an account? sign up here.
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
@@ -169,7 +142,7 @@ class _LoginPageState extends State<LoginPage> {
                       child: Text(
                         "Sign Up here",
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.inversePrimary,
+                          color: Theme.of(context).colorScheme.tertiary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

@@ -140,7 +140,6 @@ class _SignPageState extends State<SignPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                const SizedBox(height: 25),
 
                 // Message, app slogan
                 Text(
@@ -208,7 +207,7 @@ class _SignPageState extends State<SignPage> {
                   },
                 ),
 
-                const SizedBox(height: 10),
+                const SizedBox(height: 20),
 
                 // Sign up button
                 Buttons(
@@ -234,7 +233,7 @@ class _SignPageState extends State<SignPage> {
                       child: Text(
                         "Login now",
                         style: TextStyle(
-                          color: Theme.of(context).colorScheme.inversePrimary,
+                          color: Theme.of(context).colorScheme.tertiary,
                           fontWeight: FontWeight.bold,
                         ),
                       ),

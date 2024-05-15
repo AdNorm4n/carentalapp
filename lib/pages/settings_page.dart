@@ -28,9 +28,9 @@ class SettingsPage extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              // dark mode
+              // light mode
               Text(
-                "Dark Mode",
+                "Light Mode",
                  style: TextStyle(
                   fontWeight: FontWeight.bold, 
                   color: Theme.of(context).colorScheme.inversePrimary,
@@ -40,7 +40,7 @@ class SettingsPage extends StatelessWidget {
               // switch 
               CupertinoSwitch(
                 value: Provider.of<ThemeProvider>(context, listen: false)
-                .isDarkMode,
+                .isLightMode,
                 onChanged: (value) => Provider.of<ThemeProvider>(context, listen: false)
                 .toggleTheme(),
                 ),

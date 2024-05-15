@@ -1,5 +1,3 @@
-// SPRINT 1
-
 import 'package:carentalapp/components/drawer_tile.dart';
 import 'package:carentalapp/services/auth/auth_service.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +5,14 @@ import 'package:carentalapp/pages/settings_page.dart';
 import 'package:carentalapp/pages/profile_page.dart';
 
 class ListDrawer extends StatelessWidget {
-  const ListDrawer({super.key});
+  const ListDrawer({Key? key});
 
   void logout() {
     final authService = AuthService();
     authService.signOut();
   }
 
-  @override 
+  @override
   Widget build(BuildContext context) {
     return Drawer(
       backgroundColor: Theme.of(context).colorScheme.background,
@@ -23,13 +21,20 @@ class ListDrawer extends StatelessWidget {
           // app logo
           Padding(
             padding: const EdgeInsets.only(
-              top:100.0,
-              bottom: 50,
+              top: 60.0,
+              bottom: 10,
             ),
-            child: Icon(
-              Icons.lock_open_rounded,
-              size: 80, 
-              color:Theme.of(context).colorScheme.inversePrimary,
+            child: Container(
+              height: 150,
+              width: 150,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(200),
+                color: Theme.of(context).colorScheme.background,
+              ),
+              child: Image.asset(
+                'lib/images/logo/gorent.png', // Corrected asset path
+                fit: BoxFit.fill,
+              ),
             ),
           ),
 
@@ -39,42 +44,42 @@ class ListDrawer extends StatelessWidget {
             child: Divider(
               color: Theme.of(context).colorScheme.secondary,
             ),
-          ), 
+          ),
 
           // home list tile
           DrawerTile(
-            text: "H O M E", 
-            icon: Icons.home, 
+            text: "H O M E",
+            icon: Icons.home,
             onTap: () => Navigator.pop(context),
           ),
 
           // home list tile
           DrawerTile(
-            text: "P R O F I L E", 
-            icon: Icons.person, 
-             onTap: () {
+            text: "P R O F I L E",
+            icon: Icons.person,
+            onTap: () {
               Navigator.pop(context);
               Navigator.push(
-                context, 
+                context,
                 MaterialPageRoute(
                   builder: (context) => ProfilePage(),
-                  )
-                );
+                ),
+              );
             },
           ),
 
           // settings list tile
           DrawerTile(
-            text: "S E T T I N G S", 
-            icon: Icons.settings, 
+            text: "S E T T I N G S",
+            icon: Icons.settings,
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
-                context, 
+                context,
                 MaterialPageRoute(
                   builder: (context) => const SettingsPage(),
-                  )
-                );
+                ),
+              );
             },
           ),
 
@@ -82,8 +87,8 @@ class ListDrawer extends StatelessWidget {
 
           // logout list tile
           DrawerTile(
-            text: "L O G O U T", 
-            icon: Icons.logout, 
+            text: "L O G O U T",
+            icon: Icons.logout,
             onTap: () {
               logout();
               Navigator.pop(context);
@@ -91,9 +96,8 @@ class ListDrawer extends StatelessWidget {
           ),
 
           const SizedBox(height: 25),
-          
         ],
-        ),
+      ),
     );
   }
 }

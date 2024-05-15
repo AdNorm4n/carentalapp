@@ -13,7 +13,7 @@ class RoleDropdown extends StatelessWidget {
     return Container(
       width: 360, // Adjust the width as needed
       decoration: BoxDecoration(
-        border: Border.all(color: Theme.of(context).colorScheme.tertiary),
+        border: Border.all(color: Theme.of(context).colorScheme.inversePrimary),
         borderRadius: BorderRadius.circular(8.0),
       ),
       child: DropdownButtonFormField<String>(
@@ -27,11 +27,11 @@ class RoleDropdown extends StatelessWidget {
         decoration: InputDecoration(
           contentPadding: const EdgeInsets.symmetric(horizontal: 10.0), // Adjust horizontal padding
           enabledBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.tertiary),
+            borderSide: BorderSide(color: Theme.of(context).colorScheme.inversePrimary),
             borderRadius: BorderRadius.circular(8.0),
           ),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: Theme.of(context).colorScheme.tertiary),
+            borderSide: BorderSide(color: Theme.of(context).colorScheme.inversePrimary),
             borderRadius: BorderRadius.circular(8.0),
           ),
           hintText: 'Select Role',

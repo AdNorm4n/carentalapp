@@ -69,6 +69,7 @@ flutter:
    - lib/images/economy/
    - lib/images/sports/
    - lib/images/luxury/
+   - lib/images/logo/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
