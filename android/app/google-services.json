@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "369286178391",
+    "project_id": "opmobapp",
+    "storage_bucket": "opmobapp.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:369286178391:android:e850be1f4c1a950bcb6512",
+        "android_client_info": {
+          "package_name": "com.example.carentalapp"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAC-shnM_tEMzXHXm8m7c_B6-2rTQFOCso"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
