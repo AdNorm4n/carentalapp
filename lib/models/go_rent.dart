@@ -1,7 +1,9 @@
+import 'package:carentalapp/models/cart_item.dart';
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
-import 'car.dart';
+import 'package:carentalapp/models/car.dart';
 
-class GoRent extends ChangeNotifier{
+class GoRent extends ChangeNotifier {
   // list of available cars
   final List<Car> _menu = [
     // economy
@@ -25,9 +27,8 @@ class GoRent extends ChangeNotifier{
       features: CarFeatures.suv,
       fuel: CarFuel.petrol,
       trans: CarTrans.automatic,
-      seater: CarSeater.five
+      seater: CarSeater.five,
     ),
-
 
     // sports
     Car(
@@ -53,7 +54,6 @@ class GoRent extends ChangeNotifier{
       seater: CarSeater.four,
     ),
   
-
     // luxury
     Car(
       name: "Toyota Alphard", 
@@ -88,32 +88,75 @@ class GoRent extends ChangeNotifier{
       trans: CarTrans.automatic,
       seater: CarSeater.five,
     ),
+  ];
 
-  ]; 
-
-  /*
-
-  GETTERS
-
-  */
-
+  // GETTERS
   List<Car> get menu => _menu;
+  List<CartItem> get cart => _cart;
 
   /*
-  
+
   OPERATIONS
 
   */
 
+  // user cart 
+  final List<CartItem> _cart = [];
+
   // add to rental cart 
+  void addToCart(Car car) {
+    // see if there is a cart item already with the same car
+    CartItem? cartItem = _cart.firstWhereOrNull((item) => item.car == car);
+
+    // if item already exists, increment the quantity
+    if (cartItem != null) {
+      cartItem.quantity++;
+    } else {
+      // otherwise, add a new cart item to the cart
+      _cart.add(CartItem(car: car));
+    }
+    notifyListeners();
+  }
 
   // remove from rental cart
+  void removeFromCart(CartItem cartItem) {
+    int cartIndex = _cart.indexOf(cartItem);
+
+    if (cartIndex != -1) {
+      if (_cart[cartIndex].quantity > 1) {
+        _cart[cartIndex].quantity--;
+      } else {
+        _cart.removeAt(cartIndex);
+      }
+    }
+    notifyListeners();
+  }
 
   // get total price of rental cart
+  double getTotalPrice() {
+    double total = 0.0;
+    for (CartItem cartItem in _cart) {
+      total += cartItem.totalPrice;
+    }
+    return total;
+  }
 
-  // get total number of item in rental cart
+  // get total number of items in rental cart
+  int getTotalItemCount() {
+    int totalItemCount = 0;
+    for (CartItem cartItem in _cart) {
+      totalItemCount += cartItem.quantity;
+    }
+    return totalItemCount;
+  }
 
   // clear rental cart
+  void clearCart() {
+    _cart.clear();
+    notifyListeners();
+  }
+
+
 
   /*
 

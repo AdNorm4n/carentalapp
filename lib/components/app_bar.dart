@@ -1,5 +1,6 @@
 // SPRINT 1
 
+import 'package:carentalapp/pages/cart_page.dart';
 import 'package:flutter/material.dart';
 
 class HomeAppBar extends StatelessWidget {
@@ -22,7 +23,15 @@ class HomeAppBar extends StatelessWidget {
       actions:[
         // cart button
         IconButton(
-          onPressed: () {}, 
+          onPressed: () {
+            // go to the cart page
+            Navigator.push(
+              context, 
+              MaterialPageRoute(
+                builder: (context) => const CartPage(),
+            ),
+           );
+          }, 
           icon: const Icon(Icons.directions_car),
         ),
       ],
