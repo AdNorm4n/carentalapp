@@ -51,12 +51,8 @@ class CartTile extends StatelessWidget {
                           color: Theme.of(context).colorScheme.primary,
                         ),
                       ),
-                    ],
-                  ),
-                  
-                  const Spacer(),
-              
-                  // decrement quantity
+
+                      // decrement quantity
                   QuantitySelector(
                     quantity: cartItem.quantity, 
                     car: cartItem.car, 
@@ -64,6 +60,14 @@ class CartTile extends StatelessWidget {
                       gorent.removeFromCart(cartItem);
                     },
                   ),
+
+                  const SizedBox(width: 10),
+
+                    ],
+                  ),
+                  
+                  const Spacer(),
+            
                 ],
               ),
             ),

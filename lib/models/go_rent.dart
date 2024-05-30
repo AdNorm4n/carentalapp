@@ -2,6 +2,7 @@ import 'package:carentalapp/models/cart_item.dart';
 import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:carentalapp/models/car.dart';
+import 'package:intl/intl.dart';
 
 class GoRent extends ChangeNotifier {
   // list of available cars
@@ -90,18 +91,22 @@ class GoRent extends ChangeNotifier {
     ),
   ];
 
+   // user cart 
+  final List<CartItem> _cart = [];
+  
+  // delivery address (user can change/update)
+  String _deliveryAddress = '182G, Jln Beverly Heights 4';
+
   // GETTERS
   List<Car> get menu => _menu;
   List<CartItem> get cart => _cart;
+  String get deliveryAddress => _deliveryAddress;
 
   /*
 
   OPERATIONS
 
   */
-
-  // user cart 
-  final List<CartItem> _cart = [];
 
   // add to rental cart 
   void addToCart(Car car) {
@@ -156,7 +161,11 @@ class GoRent extends ChangeNotifier {
     notifyListeners();
   }
 
-
+  // update delivery address
+  void updateDeliveryAddress(String newAddress) {
+    _deliveryAddress = newAddress;
+    notifyListeners();
+  }
 
   /*
 
@@ -165,6 +174,34 @@ class GoRent extends ChangeNotifier {
   */
 
   // generate a receipt 
+  String displayCartReceipt() {
+    final receipt = StringBuffer();
+    receipt.writeln("Here's your receipt.");
+    receipt.writeln();
+
+    // format the date to include up to second only 
+    String formattedDate = 
+    DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+
+    receipt.writeln(formattedDate);
+    receipt.writeln();
+    receipt.writeln("-------");
+
+    for (final cartItem in _cart) {
+      receipt.writeln(
+        "${cartItem.quantity} x ${cartItem.car.name} - ${_formatPrice(cartItem.car.price)}");
+    }
+
+    receipt.writeln("-------");
+    receipt.writeln("Total: ${_formatPrice(getTotalPrice())}");
+    receipt.writeln();
+    receipt.writeln("Delivering to : $deliveryAddress");
+    
+    return receipt.toString();
+  }
 
   // format double value into money
+  String _formatPrice(double price) {
+    return "RM${price.toStringAsFixed(2)}";
+  }
 }
