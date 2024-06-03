@@ -28,11 +28,11 @@ class _DeliveryProgressPageState extends State<DeliveryProgressPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Car delivery in progress'),
+        title: const Text('Car Delivery in Progress'),
         backgroundColor: Colors.transparent,
       ),
       bottomNavigationBar: _buildBottomNavBar(context),
-      body: Column(
+      body: const Column(
         children: [
           Receipt(),
         ],

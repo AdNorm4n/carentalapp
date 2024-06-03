@@ -12,7 +12,7 @@ import 'package:carentalapp/components/textfields.dart';
 class SignPage extends StatefulWidget {
   final void Function()? onTap;
 
-  const SignPage({Key? key, required this.onTap}) : super(key: key);
+  const SignPage({super.key, required this.onTap});
 
   @override
   State<SignPage> createState() => _SignPageState();

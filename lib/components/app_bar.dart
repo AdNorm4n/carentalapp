@@ -32,7 +32,7 @@ class HomeAppBar extends StatelessWidget {
             ),
            );
           }, 
-          icon: const Icon(Icons.directions_car),
+          icon: const Icon(Icons.shopping_cart),
         ),
       ],
       backgroundColor: Theme.of(context).colorScheme.background,

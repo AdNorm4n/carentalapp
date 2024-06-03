@@ -1,15 +1,15 @@
-// SPRINT 2
 import 'package:carentalapp/components/buttons.dart';
 import 'package:carentalapp/models/go_rent.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';  // Add this import for using Provider
+import 'package:provider/provider.dart';
 import 'package:carentalapp/models/car.dart';
+import 'package:cached_network_image/cached_network_image.dart'; 
 
 class CarPage extends StatefulWidget {
   final Car car;
 
   const CarPage({
-    super.key, 
+    super.key,
     required this.car,
   });
 
@@ -19,12 +19,13 @@ class CarPage extends StatefulWidget {
 
 class _CarPageState extends State<CarPage> {
 
-  // method to add to cart
+  // Method to add to cart
   void addToCart(Car car) {
-  // close current car page to go back to menu
-  Navigator.pop(context);
+    
+    // Close current car page to go back to menu
+    Navigator.pop(context);
 
-    // add to cart
+    // Add to cart
     context.read<GoRent>().addToCart(car);
   }
 
@@ -32,7 +33,7 @@ class _CarPageState extends State<CarPage> {
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        // scaffold UI
+        // Scaffold UI
         Scaffold(
           appBar: AppBar(
             title: Text(
@@ -50,8 +51,10 @@ class _CarPageState extends State<CarPage> {
                 Padding(
                   padding: const EdgeInsets.only(top: 20.0, bottom: 10.0),
                   child: Center(
-                    child: Image.asset(
-                      widget.car.imagePath,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.car.imageUrl,
+                      placeholder: (context, url) => const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => const Icon(Icons.error),
                       width: 400,
                     ),
                   ),

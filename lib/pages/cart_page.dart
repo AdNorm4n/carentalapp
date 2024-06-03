@@ -53,7 +53,6 @@ class CartPage extends StatelessWidget {
         ),
         body: Column(
           children: [
-
             // list of cart
             Expanded(
               child: Column(
@@ -88,7 +87,7 @@ class CartPage extends StatelessWidget {
                   builder: (context) => const PaymentPage(),
               ),
              );
-            }, text: "Go to checkout"),
+            }, text: "Checkout Now"),
 
             const SizedBox(height: 15),
           ],

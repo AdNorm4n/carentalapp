@@ -1,7 +1,7 @@
 import 'package:carentalapp/models/car.dart';
 
 class CartItem {
-  final Car car; 
+  final Car car;
   int quantity;
 
   CartItem({

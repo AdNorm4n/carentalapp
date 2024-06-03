@@ -1,16 +1,14 @@
-// SPRINT 1&2
-
+import 'package:carentalapp/components/app_bar.dart';
+import 'package:carentalapp/components/drawer.dart';
+import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:carentalapp/models/go_rent.dart';
 import 'package:carentalapp/components/car_tile.dart';
 import 'package:carentalapp/components/current_location.dart';
 import 'package:carentalapp/components/description_box.dart';
 import 'package:carentalapp/components/tab_bar.dart';
 import 'package:carentalapp/models/car.dart';
-import 'package:carentalapp/models/go_rent.dart';
 import 'package:carentalapp/pages/car_page.dart';
-import 'package:flutter/material.dart';
-import 'package:carentalapp/components/drawer.dart';
-import 'package:carentalapp/components/app_bar.dart';
-import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -20,7 +18,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin {
-
+  
   // tab bar controller 
   late TabController _tabController;
 
@@ -32,8 +30,8 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
 
   @override
   void dispose() {
-   _tabController.dispose();
-   super.dispose();
+    _tabController.dispose();
+    super.dispose();
   }
 
   // sort out and return a list of car that belong to a specific category
@@ -56,20 +54,20 @@ class _HomePageState extends State<HomePage> with SingleTickerProviderStateMixin
           // get individual car
           final car = categoryMenu[index];
 
-          // return car tile UI
+          // return car title UI
           return CarTile(
-            car: car, 
+            car: car,
             onTap: () => Navigator.push(
               context, MaterialPageRoute(
                 builder: (context) => CarPage(car: car),
-            ),
+              ),
             ),
           );
         },
       );
     }).toList();
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

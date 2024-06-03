@@ -1,19 +1,28 @@
-// car item
+import 'package:cloud_firestore/cloud_firestore.dart';
+
+enum CarCategory { economy, sports, luxury }
+enum CarFeatures { hatchback, suv, coupe, mpv }
+enum CarFuel { petrol, diesel, electric }
+enum CarTrans { automatic, manual }
+enum CarSeater { two, four, five, seven }
+
 class Car {
-  final String name;           // Myvi 
-  final String description;    // Myvi condition 
-  final String imagePath;      // lib/images/myvi.png
-  final double price;          // 10.50
-  final CarCategory category;  // economy
-  final CarFeatures features;  // hatchback
-  final CarFuel fuel;          // petrol
-  final CarTrans trans;        // automatic
-  final CarSeater seater;      // five
+  String id;
+  String name;
+  String description;
+  String imageUrl;
+  double price;
+  CarCategory category;
+  CarFeatures features;
+  CarFuel fuel;
+  CarTrans trans;
+  CarSeater seater;
 
   Car({
+    required this.id,
     required this.name,
     required this.description,
-    required this.imagePath,
+    required this.imageUrl,
     required this.price,
     required this.category,
     required this.features,
@@ -21,48 +30,35 @@ class Car {
     required this.trans,
     required this.seater,
   });
-}
 
-// car categories 
-enum CarCategory {
-  economy,
-  sports,
-  luxury,
-}
+  factory Car.fromFirestore(DocumentSnapshot doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
 
-// car categories 
-enum CarFeatures {
-  hatchback,
-  coupe,
-  sedan,
-  suv,
-  mpv,
-}
+    return Car(
+      id: doc.id,
+      name: data['name'] ?? '',
+      description: data['description'] ?? '',
+      imageUrl: data['imageUrl'] ?? '',
+      price: (data['price'] as num?)?.toDouble() ?? 0.0,
+      category: CarCategory.values[data['category'] ?? 0],
+      features: CarFeatures.values[data['features'] ?? 0],
+      fuel: CarFuel.values[data['fuel'] ?? 0],
+      trans: CarTrans.values[data['trans'] ?? 0],
+      seater: CarSeater.values[data['seater'] ?? 0],
+    );
+  }
 
-// car fuel 
-enum CarFuel {
-  petrol,
-  diesel,
-  hybrid,
-  electriv,
-}
-
-// car trans 
-enum CarTrans {
-  manual,
-  automatic,
-}
-
-// car seater 
-enum CarSeater {
-  one,
-  two,
-  three,
-  four,
-  five,
-  six,
-  seven,
-  eight,
-  nine,
-  ten,
+  Map<String, dynamic> toMap() {
+    return {
+      'name': name,
+      'description': description,
+      'imageUrl': imageUrl,
+      'price': price,
+      'category': category.index,
+      'features': features.index,
+      'fuel': fuel.index,
+      'trans': trans.index,
+      'seater': seater.index,
+    };
+  }
 }

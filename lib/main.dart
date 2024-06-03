@@ -1,10 +1,10 @@
-// SPRINT 1
-
 import 'package:carentalapp/firebase_options.dart';
 import 'package:carentalapp/models/go_rent.dart';
+import 'package:carentalapp/pages/home_page.dart';
 import 'package:carentalapp/services/auth/auth_gate.dart';
 import 'package:carentalapp/pages/signup_page.dart';
 import 'package:carentalapp/pages/subscribe_page.dart';
+import 'package:carentalapp/pages/add_car_page.dart'; 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:carentalapp/themes/theme_provider.dart';
@@ -43,6 +43,8 @@ class MyApp extends StatelessWidget {
       routes: {
         '/signup': (context) => const SignPage(onTap: null),
         '/renter_subscription': (context) => const SubscribePage(),
+        '/add_car': (context) => AddCarPage(), // Add this route
+        '/car_list': (context) => const HomePage(), // Add this route
       },
     );
   }

@@ -3,6 +3,7 @@ import 'package:carentalapp/models/cart_item.dart';
 import 'package:carentalapp/models/go_rent.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CartTile extends StatelessWidget {
   final CartItem cartItem;
@@ -23,36 +24,44 @@ class CartTile extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
-                //crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // car image
+                  // Car image
                   ClipRRect(
                     borderRadius: BorderRadius.circular(8),
-                    child: Image.asset(
-                      cartItem.car.imagePath,
+                    child: CachedNetworkImage(
+                      imageUrl: cartItem.car.imageUrl,
+                      placeholder: (context, url) => const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) => const Icon(Icons.error),
                       height: 120,
                       width: 130,
                     ),
                   ),
-              
-                  const SizedBox(width: 10),
-              
-                  // name and price 
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      // car name
-                      Text(cartItem.car.name),
-              
-                      // car price
-                      Text(
-                        'RM${cartItem.car.price.toStringAsFixed(2)}',
-                        style: TextStyle(
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
 
-                      // decrement quantity
+                  const SizedBox(width: 10),
+
+                  // Name and price 
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Car name
+                        Text(
+                          cartItem.car.name,
+                          style: const TextStyle(fontWeight: FontWeight.bold),
+                        ),
+
+                        // Car price
+                        Text(
+                          'RM${cartItem.car.price.toStringAsFixed(2)}',
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.primary,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+
+                  // Quantity selector
                   QuantitySelector(
                     quantity: cartItem.quantity, 
                     car: cartItem.car, 
@@ -62,12 +71,10 @@ class CartTile extends StatelessWidget {
                   ),
 
                   const SizedBox(width: 10),
-
-                    ],
-                  ),
                   
-                  const Spacer(),
-            
+
+                   const Spacer(),
+
                 ],
               ),
             ),
