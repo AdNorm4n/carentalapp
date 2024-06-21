@@ -19,7 +19,10 @@ class GoRent extends ChangeNotifier {
   String get deliveryAddress => _deliveryAddress;
 
   void fetchCars() {
-    FirebaseFirestore.instance.collection('cars').snapshots().listen((snapshot) {
+    FirebaseFirestore.instance
+        .collection('cars')
+        .snapshots()
+        .listen((snapshot) {
       _menu = snapshot.docs.map((doc) => Car.fromFirestore(doc)).toList();
       notifyListeners();
     });
@@ -80,8 +83,8 @@ class GoRent extends ChangeNotifier {
     receipt.writeln("Here's your receipt.");
     receipt.writeln();
 
-    String formattedDate = 
-    DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
+    String formattedDate =
+        DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now());
 
     receipt.writeln(formattedDate);
     receipt.writeln();
@@ -89,18 +92,40 @@ class GoRent extends ChangeNotifier {
 
     for (final cartItem in _cart) {
       receipt.writeln(
-        "${cartItem.quantity} x ${cartItem.car.name} - ${_formatPrice(cartItem.car.price)}");
+          "${cartItem.quantity} x ${cartItem.car.name} - ${_formatPrice(cartItem.car.price)}");
     }
 
     receipt.writeln("-------");
     receipt.writeln("Total: ${_formatPrice(getTotalPrice())}");
     receipt.writeln();
     receipt.writeln("Delivering to : $deliveryAddress");
-    
+
     return receipt.toString();
   }
 
   String _formatPrice(double price) {
     return "RM${price.toStringAsFixed(2)}";
+  }
+
+  Map<String, dynamic> getBookingDetails() {
+    List<Map<String, dynamic>> items = _cart.map((cartItem) {
+      return {
+        'item': "${cartItem.quantity} x ${cartItem.car.name}",
+        'subtotal': _formatPrice(cartItem.car.price),
+        'total': _formatPrice(cartItem.totalPrice),
+      };
+    }).toList();
+
+    return {
+      'booking':
+          "Here's your receipt. ${DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())}",
+      'total_price': {
+        'items': items,
+        'total': _formatPrice(getTotalPrice()),
+      },
+      'location': deliveryAddress,
+      'date': DateFormat('MMMM d, y \'at\' h:mm a').format(DateTime.now()) +
+          ' UTC${DateTime.now().timeZoneOffset.inHours}'
+    };
   }
 }
