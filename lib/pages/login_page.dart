@@ -1,6 +1,4 @@
-// SPRINT 1
-
-// ignore_for_file: use_build_context_synchronously, use_super_parameters, prefer_const_constructors
+// login_page.dart
 
 import 'package:carentalapp/pages/forgotpass_page.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +9,7 @@ import '../services/auth/auth_service.dart';
 class LoginPage extends StatefulWidget {
   final void Function()? onTap;
 
-  const LoginPage({
-    Key? key, 
-    required this.onTap}) : super(key: key);
+  const LoginPage({Key? key, required this.onTap}) : super(key: key);
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -24,18 +20,27 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  // login method
-  void login() async {
-    // get instance of auth service
-    final authService = AuthService();
+  // AuthService instance
+  final AuthService _authService = AuthService();
 
-    // try login
+  // login method
+  Future<void> login() async {
     try {
-      await authService.signInWithEmailPassword(
+      await _authService.signInWithEmailPassword(
         emailController.text,
         passwordController.text,
       );
-      // Optionally navigate to the home page or show a success message
+
+      // Fetch user role after login
+      String userRole =
+          await _authService.getUserRole(_authService.getCurrentUser()!.uid);
+
+      // Navigate based on role
+      if (userRole == 'Renter') {
+        Navigator.pushReplacementNamed(context, '/renter_page');
+      } else {
+        Navigator.pushReplacementNamed(context, '/home_page');
+      }
     } catch (e) {
       showDialog(
         context: context,
@@ -55,15 +60,15 @@ class _LoginPageState extends State<LoginPage> {
     }
   }
 
-  // forgot password 
+  // forgot password
   void forgotPw() {
-  Navigator.push(
-    context,
-    MaterialPageRoute(builder: (context) => ForgotPasswordPage(),
-    ),
-  );
-}
-
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ForgotPasswordPage(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -88,9 +93,7 @@ class _LoginPageState extends State<LoginPage> {
                     fit: BoxFit.fill,
                   ),
                 ),
-
                 const SizedBox(height: 25),
-
                 Textfields(
                   controller: emailController,
                   hintText: "Email",

@@ -1,16 +1,27 @@
-import 'package:carentalapp/components/drawer_tile.dart';
-import 'package:carentalapp/pages/add_car_page.dart';
-import 'package:carentalapp/services/auth/auth_service.dart';
+// drawer.dart
+
+import 'package:carentalapp/pages/booking_history_page.dart';
+import 'package:carentalapp/pages/renter_page.dart';
 import 'package:flutter/material.dart';
-import 'package:carentalapp/pages/settings_page.dart';
+import 'package:carentalapp/services/auth/auth_service.dart';
 import 'package:carentalapp/pages/profile_page.dart';
+import 'package:carentalapp/pages/settings_page.dart';
+import 'package:carentalapp/components/drawer_tile.dart';
 
 class ListDrawer extends StatelessWidget {
-  const ListDrawer({Key? key});
+  const ListDrawer({Key? key}) : super(key: key);
 
-  void logout() {
+  void logout(BuildContext context) async {
     final authService = AuthService();
-    authService.signOut();
+    try {
+      await authService.signOut();
+      Navigator.pushReplacementNamed(context, '/login');
+    } catch (e) {
+      // Handle error during logout
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to log out: $e')),
+      );
+    }
   }
 
   @override
@@ -19,7 +30,6 @@ class ListDrawer extends StatelessWidget {
       backgroundColor: Theme.of(context).colorScheme.background,
       child: Column(
         children: [
-          // app logo
           Padding(
             padding: const EdgeInsets.only(
               top: 60.0,
@@ -33,28 +43,22 @@ class ListDrawer extends StatelessWidget {
                 color: Theme.of(context).colorScheme.background,
               ),
               child: Image.asset(
-                'lib/images/logo/gorent.png', // Corrected asset path
+                'lib/images/logo/gorent.png',
                 fit: BoxFit.fill,
               ),
             ),
           ),
-
-          // divider line
           Padding(
             padding: const EdgeInsets.all(25.0),
             child: Divider(
               color: Theme.of(context).colorScheme.secondary,
             ),
           ),
-
-          // home list tile
           DrawerTile(
             text: "H O M E",
             icon: Icons.home,
             onTap: () => Navigator.pop(context),
           ),
-
-          // home list tile
           DrawerTile(
             text: "P R O F I L E",
             icon: Icons.person,
@@ -68,8 +72,19 @@ class ListDrawer extends StatelessWidget {
               );
             },
           ),
-
-          // home list tile
+          DrawerTile(
+            text: "B O O K I N G",
+            icon: Icons.history,
+            onTap: () {
+              Navigator.pop(context);
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => BookingHistoryPage(),
+                ),
+              );
+            },
+          ),
           DrawerTile(
             text: "R E N T E R",
             icon: Icons.car_rental,
@@ -78,13 +93,11 @@ class ListDrawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => AddCarPage(),
+                  builder: (context) => RenterPage(),
                 ),
               );
             },
           ),
-
-          // settings list tile
           DrawerTile(
             text: "S E T T I N G S",
             icon: Icons.settings,
@@ -93,24 +106,20 @@ class ListDrawer extends StatelessWidget {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const SettingsPage(),
+                  builder: (context) => SettingsPage(),
                 ),
               );
             },
           ),
-
           const Spacer(),
-
-          // logout list tile
           DrawerTile(
             text: "L O G O U T",
             icon: Icons.logout,
             onTap: () {
-              logout();
               Navigator.pop(context);
+              logout(context);
             },
           ),
-
           const SizedBox(height: 25),
         ],
       ),
