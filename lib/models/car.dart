@@ -1,9 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 enum CarCategory { economy, sports, luxury }
+
 enum CarFeatures { hatchback, suv, coupe, mpv }
+
 enum CarFuel { petrol, diesel, electric }
+
 enum CarTrans { automatic, manual }
+
 enum CarSeater { two, four, five, seven }
 
 class Car {
@@ -17,6 +21,7 @@ class Car {
   CarFuel fuel;
   CarTrans trans;
   CarSeater seater;
+  String ownerId; // Owner ID
 
   Car({
     required this.id,
@@ -29,6 +34,7 @@ class Car {
     required this.fuel,
     required this.trans,
     required this.seater,
+    required this.ownerId, // Initialize owner ID in constructor
   });
 
   factory Car.fromFirestore(DocumentSnapshot doc) {
@@ -45,6 +51,7 @@ class Car {
       fuel: CarFuel.values[data['fuel'] ?? 0],
       trans: CarTrans.values[data['trans'] ?? 0],
       seater: CarSeater.values[data['seater'] ?? 0],
+      ownerId: data['ownerId'] ?? '', // Assign ownerId from Firestore data
     );
   }
 
@@ -59,6 +66,7 @@ class Car {
       'fuel': fuel.index,
       'trans': trans.index,
       'seater': seater.index,
+      'ownerId': ownerId, // Include ownerId in the map
     };
   }
 }

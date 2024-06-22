@@ -1,9 +1,10 @@
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:carentalapp/models/car.dart';
 import 'package:carentalapp/models/cart_item.dart';
 import 'package:intl/intl.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:collection/collection.dart';
 
 class GoRent extends ChangeNotifier {
   List<Car> _menu = [];
@@ -127,5 +128,32 @@ class GoRent extends ChangeNotifier {
       'date': DateFormat('MMMM d, y \'at\' h:mm a').format(DateTime.now()) +
           ' UTC${DateTime.now().timeZoneOffset.inHours}'
     };
+  }
+
+  void addCar(Car newCar) {
+    String ownerId = FirebaseAuth.instance.currentUser?.uid ?? '';
+    newCar.ownerId = ownerId;
+
+    FirebaseFirestore.instance.collection('cars').add(newCar.toMap());
+  }
+
+  // Method to remove a car by ID
+  void removeCar(String carId) {
+    FirebaseFirestore.instance.collection('cars').doc(carId).delete();
+    notifyListeners();
+  }
+
+  // Method to clear all cars owned by the current user
+  void clearUserCars(String userId) {
+    FirebaseFirestore.instance
+        .collection('cars')
+        .where('ownerId', isEqualTo: userId)
+        .get()
+        .then((snapshot) {
+      for (var doc in snapshot.docs) {
+        doc.reference.delete();
+      }
+    });
+    notifyListeners();
   }
 }

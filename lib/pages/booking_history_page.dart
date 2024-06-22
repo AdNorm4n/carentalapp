@@ -1,61 +1,78 @@
-import 'package:carentalapp/pages/active_booking_page.dart';
-import 'package:carentalapp/pages/completed_booking_page.dart';
 import 'package:flutter/material.dart';
-import 'package:carentalapp/components/buttons.dart';
+import 'package:carentalapp/components/booking_tab_bar.dart';
 
-class BookingHistoryPage extends StatelessWidget {
+class BookingHistoryPage extends StatefulWidget {
   const BookingHistoryPage({Key? key}) : super(key: key);
 
   @override
+  _BookingHistoryPageState createState() => _BookingHistoryPageState();
+}
+
+class _BookingHistoryPageState extends State<BookingHistoryPage>
+    with SingleTickerProviderStateMixin {
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+  }
+
+  @override
+  void dispose() {
+    _tabController.dispose();
+    super.dispose();
+  }
+
+  /* List<Car> _filterBookingsByCategory(bool isUpcoming, List<Car> fullBookings) {
+    // Simulated filtering logic
+    return fullBookings.where((car) => car.isUpcoming == isUpcoming).toList();
+  }
+
+  List<Widget> getBookingsInThisCategory(List<Car> fullBookings) {
+    return [true, false].map((isUpcoming) {
+      List<Car> categoryBookings = _filterBookingsByCategory(isUpcoming, fullBookings);
+
+      return ListView.builder(
+        itemCount: categoryBookings.length,
+        physics: const NeverScrollableScrollPhysics(),
+        padding: EdgeInsets.zero,
+        itemBuilder: (context, index) {
+          final car = categoryBookings[index];
+          return CarTile(
+            car: car,
+            onTap: () => Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (context) => CarPage(car: car),
+              ),
+            ),
+          );
+        },
+      );
+    }).toList();
+  }
+*/
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.secondary,
       appBar: AppBar(
-        title: const Text('Booking History Page'),
+        title: const Text('Booking History'),
       ),
-      body: SafeArea(
-        child: Center(
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const SizedBox(height: 10),
-                Text(
-                  'This is the booking history page',
-                  style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                SizedBox(height: 20),
-                Buttons(
-                  text: 'Active Booking',
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ActiveBookingPage()));
-                  },
-                ),
-                SizedBox(height: 10),
-                Buttons(
-                  text: 'Completed Booking',
-                  onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => CompletedBookingPage()));
-                  },
-                ),
-                SizedBox(height: 20),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/home_page');
-                  },
-                  child: Text('Go Home'),
-                ),
-              ],
-            ),
+      body: NestedScrollView(
+        headerSliverBuilder: (context, innerBoxIsScrolled) => [
+          SliverToBoxAdapter(
+            child: BookingTabBar(tabController: _tabController),
           ),
+        ],
+        body: TabBarView(
+          controller: _tabController,
+          children: [
+            // Placeholder widgets for each tab
+            Center(child: Text('Active Bookings')),
+            Center(child: Text('Completed Bookings')),
+          ],
         ),
       ),
     );

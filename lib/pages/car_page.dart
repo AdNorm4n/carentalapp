@@ -3,7 +3,7 @@ import 'package:carentalapp/models/go_rent.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:carentalapp/models/car.dart';
-import 'package:cached_network_image/cached_network_image.dart'; 
+import 'package:cached_network_image/cached_network_image.dart';
 
 class CarPage extends StatefulWidget {
   final Car car;
@@ -18,10 +18,8 @@ class CarPage extends StatefulWidget {
 }
 
 class _CarPageState extends State<CarPage> {
-
   // Method to add to cart
   void addToCart(Car car) {
-    
     // Close current car page to go back to menu
     Navigator.pop(context);
 
@@ -53,8 +51,10 @@ class _CarPageState extends State<CarPage> {
                   child: Center(
                     child: CachedNetworkImage(
                       imageUrl: widget.car.imageUrl,
-                      placeholder: (context, url) => const CircularProgressIndicator(),
-                      errorWidget: (context, url, error) => const Icon(Icons.error),
+                      placeholder: (context, url) =>
+                          const CircularProgressIndicator(),
+                      errorWidget: (context, url, error) =>
+                          const Icon(Icons.error),
                       width: 400,
                     ),
                   ),
@@ -88,7 +88,8 @@ class _CarPageState extends State<CarPage> {
                 ),
                 // Car features
                 Padding(
-                  padding: const EdgeInsets.only(bottom: 20.0, left: 20.0, right: 20.0),
+                  padding: const EdgeInsets.only(
+                      bottom: 20.0, left: 20.0, right: 20.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
