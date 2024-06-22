@@ -134,13 +134,21 @@ class GoRent extends ChangeNotifier {
     String ownerId = FirebaseAuth.instance.currentUser?.uid ?? '';
     newCar.ownerId = ownerId;
 
-    FirebaseFirestore.instance.collection('cars').add(newCar.toMap());
+    FirebaseFirestore.instance
+        .collection('cars')
+        .add(newCar.toMap())
+        .then((docRef) {
+      newCar.id = docRef.id; // Update the car ID with the Firestore document ID
+      notifyListeners();
+    });
   }
 
   // Method to remove a car by ID
   void removeCar(String carId) {
-    FirebaseFirestore.instance.collection('cars').doc(carId).delete();
-    notifyListeners();
+    FirebaseFirestore.instance.collection('cars').doc(carId).delete().then((_) {
+      _menu.removeWhere((car) => car.id == carId);
+      notifyListeners();
+    });
   }
 
   // Method to clear all cars owned by the current user
@@ -153,7 +161,8 @@ class GoRent extends ChangeNotifier {
       for (var doc in snapshot.docs) {
         doc.reference.delete();
       }
+      _menu.removeWhere((car) => car.ownerId == userId);
+      notifyListeners();
     });
-    notifyListeners();
   }
 }

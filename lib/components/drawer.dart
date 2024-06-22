@@ -73,8 +73,8 @@ class ListDrawer extends StatelessWidget {
             },
           ),
           DrawerTile(
-            text: "B O O K I N G",
-            icon: Icons.history,
+            text: "B O O K I N G S",
+            icon: Icons.book_online,
             onTap: () {
               Navigator.pop(context);
               Navigator.push(
