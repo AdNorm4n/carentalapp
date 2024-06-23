@@ -15,7 +15,7 @@ class EditCarPage extends StatefulWidget {
 }
 
 class _EditCarPageState extends State<EditCarPage> {
-  late Car car;
+  Car? car;
   bool isLoading = true;
   File? _imageFile;
 
@@ -49,7 +49,7 @@ class _EditCarPageState extends State<EditCarPage> {
           .collection('cars')
           .doc(widget.carId)
           .update({field: newValue});
-      fetchCar(); // Refresh car data
+      await fetchCar(); // Refresh car data
     } catch (e) {
       print("Error updating field: $e");
     }
@@ -103,7 +103,11 @@ class _EditCarPageState extends State<EditCarPage> {
               onPressed: () async {
                 String newValue = controller.text;
                 if (newValue.isNotEmpty) {
-                  await editField(field, newValue);
+                  if (field == 'price') {
+                    await editField(field, double.parse(newValue));
+                  } else {
+                    await editField(field, newValue);
+                  }
                 }
                 Navigator.of(context).pop();
               },
@@ -128,9 +132,10 @@ class _EditCarPageState extends State<EditCarPage> {
                   title: Text(value.toString().split('.').last),
                   value: value,
                   groupValue: currentValue,
-                  onChanged: (T? newValue) {
+                  onChanged: (T? newValue) async {
                     if (newValue != null) {
-                      editField(field, newValue);
+                      String enumValue = newValue.toString().split('.').last;
+                      await editField(field, enumValue);
                       Navigator.of(context).pop();
                     }
                   },
@@ -158,18 +163,20 @@ class _EditCarPageState extends State<EditCarPage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 25),
-                  // Car image
-                  GestureDetector(
-                    onTap: _pickImage,
-                    child: _imageFile == null
-                        ? Image.network(
-                            car.imageUrl,
-                            width: 400,
-                          )
-                        : Image.file(
-                            _imageFile!,
-                            width: 400,
-                          ),
+                  // Centralized Image Display
+                  Center(
+                    child: GestureDetector(
+                      onTap: _pickImage,
+                      child: _imageFile == null
+                          ? Image.network(
+                              car!.imageUrl,
+                              width: 400,
+                            )
+                          : Image.file(
+                              _imageFile!,
+                              width: 400,
+                            ),
+                    ),
                   ),
                   const SizedBox(height: 25),
                   // Car details
@@ -183,45 +190,45 @@ class _EditCarPageState extends State<EditCarPage> {
                     ),
                   ),
                   // Car name
-                  _buildTextBox('Name', car.name,
-                      () => _showEditDialog('name', car.name)),
+                  _buildTextBox('name', car!.name,
+                      () => _showEditDialog('name', car!.name)),
                   // Car description
-                  _buildTextBox('Description', car.description,
-                      () => _showEditDialog('description', car.description)),
+                  _buildTextBox('description', car!.description,
+                      () => _showEditDialog('description', car!.description)),
                   // Car price
-                  _buildTextBox('Price', 'RM${car.price.toStringAsFixed(2)}',
-                      () => _showEditDialog('price', car.price.toString())),
+                  _buildTextBox('price', 'RM${car!.price.toStringAsFixed(2)}',
+                      () => _showEditDialog('price', car!.price.toString())),
                   // Car category
                   _buildEnumTextBox(
-                      'Category',
-                      car.category.toString().split('.').last,
+                      'category',
+                      car!.category.toString().split('.').last,
                       () => _showEnumEditDialog<CarCategory>(
-                          'category', CarCategory.values, car.category)),
+                          'category', CarCategory.values, car!.category)),
                   // Car features
                   _buildEnumTextBox(
-                      'Features',
-                      car.features.toString().split('.').last,
+                      'features',
+                      car!.features.toString().split('.').last,
                       () => _showEnumEditDialog<CarFeatures>(
-                          'features', CarFeatures.values, car.features)),
+                          'features', CarFeatures.values, car!.features)),
                   // Car fuel
                   _buildEnumTextBox(
-                      'Fuel Type',
-                      car.fuel.toString().split('.').last,
+                      'fuel',
+                      car!.fuel.toString().split('.').last,
                       () => _showEnumEditDialog<CarFuel>(
-                          'fuel', CarFuel.values, car.fuel)),
+                          'fuel', CarFuel.values, car!.fuel)),
                   // Car transmission
                   _buildEnumTextBox(
-                      'Transmission',
-                      car.trans.toString().split('.').last,
+                      'trans',
+                      car!.trans.toString().split('.').last,
                       () => _showEnumEditDialog<CarTrans>(
-                          'trans', CarTrans.values, car.trans)),
+                          'trans', CarTrans.values, car!.trans)),
                   // Car seater
                   _buildEnumTextBox(
-                      'Seater',
-                      car.seater.toString().split('.').last,
+                      'seater',
+                      car!.seater.toString().split('.').last,
                       () => _showEnumEditDialog<CarSeater>(
-                          'seater', CarSeater.values, car.seater)),
-                  const SizedBox(height: 25), // Added space here
+                          'seater', CarSeater.values, car!.seater)),
+                  const SizedBox(height: 25),
                 ],
               ),
             ),
@@ -259,7 +266,7 @@ class _EditCarPageState extends State<EditCarPage> {
     return GestureDetector(
       onTap: onPressed,
       child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.secondary,
