@@ -139,6 +139,16 @@ class GoRent extends ChangeNotifier {
         .add(newCar.toMap())
         .then((docRef) {
       newCar.id = docRef.id; // Update the car ID with the Firestore document ID
+
+      // Update enum fields to their corresponding enum values
+      newCar.category = CarCategory.values[newCar.category.index];
+      newCar.features = CarFeatures.values[newCar.features.index];
+      newCar.fuel = CarFuel.values[newCar.fuel.index];
+      newCar.trans = CarTrans.values[newCar.trans.index];
+      newCar.seater = CarSeater.values[newCar.seater.index];
+
+      // Update local menu and notify listeners
+      _menu.add(newCar);
       notifyListeners();
     });
   }
