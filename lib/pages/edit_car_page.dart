@@ -119,35 +119,6 @@ class _EditCarPageState extends State<EditCarPage> {
     );
   }
 
-  void _showEnumEditDialog<T>(String field, List<T> values, T currentValue) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Edit $field'),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: values.map((value) {
-                return RadioListTile<T>(
-                  title: Text(value.toString().split('.').last),
-                  value: value,
-                  groupValue: currentValue,
-                  onChanged: (T? newValue) async {
-                    if (newValue != null) {
-                      String enumValue = newValue.toString().split('.').last;
-                      await editField(field, enumValue);
-                      Navigator.of(context).pop();
-                    }
-                  },
-                );
-              }).toList(),
-            ),
-          ),
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -190,44 +161,31 @@ class _EditCarPageState extends State<EditCarPage> {
                     ),
                   ),
                   // Car name
-                  _buildTextBox('name', car!.name,
+                  _buildTextBox('Name', car!.name,
                       () => _showEditDialog('name', car!.name)),
                   // Car description
-                  _buildTextBox('description', car!.description,
+                  _buildTextBox('Description', car!.description,
                       () => _showEditDialog('description', car!.description)),
                   // Car price
-                  _buildTextBox('price', 'RM${car!.price.toStringAsFixed(2)}',
+                  _buildTextBox(
+                      'Price/hour',
+                      'RM${car!.price.toStringAsFixed(2)}',
                       () => _showEditDialog('price', car!.price.toString())),
                   // Car category
                   _buildEnumTextBox(
-                      'category',
-                      car!.category.toString().split('.').last,
-                      () => _showEnumEditDialog<CarCategory>(
-                          'category', CarCategory.values, car!.category)),
+                      'Category', car!.category.toString().split('.').last),
                   // Car features
                   _buildEnumTextBox(
-                      'features',
-                      car!.features.toString().split('.').last,
-                      () => _showEnumEditDialog<CarFeatures>(
-                          'features', CarFeatures.values, car!.features)),
+                      'Features', car!.features.toString().split('.').last),
                   // Car fuel
                   _buildEnumTextBox(
-                      'fuel',
-                      car!.fuel.toString().split('.').last,
-                      () => _showEnumEditDialog<CarFuel>(
-                          'fuel', CarFuel.values, car!.fuel)),
+                      'Fuel', car!.fuel.toString().split('.').last),
                   // Car transmission
                   _buildEnumTextBox(
-                      'trans',
-                      car!.trans.toString().split('.').last,
-                      () => _showEnumEditDialog<CarTrans>(
-                          'trans', CarTrans.values, car!.trans)),
+                      'Trans', car!.trans.toString().split('.').last),
                   // Car seater
                   _buildEnumTextBox(
-                      'seater',
-                      car!.seater.toString().split('.').last,
-                      () => _showEnumEditDialog<CarSeater>(
-                          'seater', CarSeater.values, car!.seater)),
+                      'Seater', car!.seater.toString().split('.').last),
                   const SizedBox(height: 25),
                 ],
               ),
@@ -262,44 +220,26 @@ class _EditCarPageState extends State<EditCarPage> {
     );
   }
 
-  Widget _buildEnumTextBox(String title, String text, VoidCallback onPressed) {
-    return GestureDetector(
-      onTap: onPressed,
-      child: Container(
-        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.secondary,
-          borderRadius: BorderRadius.circular(8),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                IconButton(
-                  onPressed: onPressed,
-                  icon: const Icon(
-                    Icons.settings,
-                    color: Color.fromARGB(255, 122, 122, 122),
-                  ),
-                ),
-              ],
-            ),
-            Text(
-              text,
-              style: const TextStyle(fontSize: 16),
-            ),
-          ],
-        ),
+  Widget _buildEnumTextBox(String title, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.secondary,
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+          ),
+          Text(
+            text,
+            style: const TextStyle(fontSize: 16),
+          ),
+        ],
       ),
     );
   }
