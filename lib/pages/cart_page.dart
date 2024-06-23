@@ -1,9 +1,9 @@
+import 'package:carentalapp/pages/confirm_booking_page.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:carentalapp/components/buttons.dart';
 import 'package:carentalapp/components/cart_tile.dart';
 import 'package:carentalapp/models/go_rent.dart';
-import 'package:carentalapp/pages/booking_detail_page.dart';
 
 class CartPage extends StatelessWidget {
   const CartPage({Key? key}) : super(key: key);
@@ -85,14 +85,14 @@ class CartPage extends StatelessWidget {
                     Navigator.push(
                       context,
                       MaterialPageRoute(
-                        builder: (context) => const BookingDetailPage(),
+                        builder: (context) => const ConfirmBookingPage(),
                       ),
                     );
                   }
                 },
                 text: "Proceed",
               ),
-              const SizedBox(height: 15),
+              const SizedBox(height: 25),
             ],
           ),
         );
