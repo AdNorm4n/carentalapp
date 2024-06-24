@@ -16,7 +16,27 @@ class ConfirmBookingPage extends StatefulWidget {
 }
 
 class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
-  DateTimeRange? bookingPeriod; // Booking period range
+
+  DateTimeRange? bookingPeriod;
+  TimeOfDay? startTime;
+  TimeOfDay? endTime;
+
+  Future<void> _selectTime(BuildContext context, bool isStart) async {
+    final TimeOfDay? picked = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+    if (picked != null) {
+      setState(() {
+        if (isStart) {
+          startTime = picked;
+        } else {
+          endTime = picked;
+        }
+      });
+    }
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -25,10 +45,22 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
         final userCart = gorent.cart;
 
         double totalPrice = userCart.fold(0.0, (sum, item) {
-          if (bookingPeriod == null) return sum;
-          final durationHours = bookingPeriod!.duration.inHours;
+
+          if (bookingPeriod == null || startTime == null || endTime == null) {
+            return sum;
+          }
+          final durationHours =
+              (bookingPeriod!.end.difference(bookingPeriod!.start).inHours +
+                      endTime!.hour -
+                      startTime!.hour)
+                  .toDouble();
           return sum + (item.car.price * item.quantity * durationHours);
         });
+
+        double bookingFee = gorent.bookingFee;
+        double grandTotal = totalPrice + bookingFee;
+
+        gorent.setBookingDetails(bookingPeriod, startTime, endTime);
 
         return Scaffold(
           appBar: AppBar(
@@ -50,6 +82,10 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                       car: cartItem.car,
                       quantity: cartItem.quantity,
                       bookingPeriod: bookingPeriod,
+
+                      startTime: startTime,
+                      endTime: endTime,
+
                     );
                   },
                 ),
@@ -69,8 +105,9 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
-                    SizedBox(height: 8),
-                    // Adjusted ElevatedButton size and style
+
+                    const SizedBox(height: 8),
+
                     ElevatedButton(
                       onPressed: () async {
                         final picked = await showDateRangePicker(
@@ -80,21 +117,24 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                           lastDate:
                               DateTime.now().add(const Duration(days: 365)),
                         );
-                        if (picked != null && picked.duration.inHours > 0) {
+
+                        if (picked != null) {
+
                           setState(() {
                             bookingPeriod = picked;
                           });
                         }
                       },
                       style: ElevatedButton.styleFrom(
-                        padding:
-                            EdgeInsets.symmetric(vertical: 16, horizontal: 24),
-                        backgroundColor: Theme.of(context)
-                            .colorScheme
-                            .inversePrimary, // Adjust padding
+
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 24),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.inversePrimary,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
-                        ), // Background color
+                        ),
+
                       ),
                       child: Text(
                         bookingPeriod == null
@@ -107,6 +147,54 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                         ),
                       ),
                     ),
+
+                    const SizedBox(height: 8),
+                    ElevatedButton(
+                      onPressed: () => _selectTime(context, true),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 24),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.inversePrimary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        startTime == null
+                            ? 'Select Start Time'
+                            : 'Start Time: ${startTime!.format(context)}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 8),
+                    ElevatedButton(
+                      onPressed: () => _selectTime(context, false),
+                      style: ElevatedButton.styleFrom(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 16, horizontal: 24),
+                        backgroundColor:
+                            Theme.of(context).colorScheme.inversePrimary,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                      ),
+                      child: Text(
+                        endTime == null
+                            ? 'Select End Time'
+                            : 'End Time: ${endTime!.format(context)}',
+                        style: TextStyle(
+                          fontSize: 16,
+                          fontWeight: FontWeight.bold,
+                          color: Theme.of(context).colorScheme.primary,
+                        ),
+                      ),
+                    ),
+
                     const SizedBox(height: 50),
                     Text(
                       'Total Price: RM${totalPrice.toStringAsFixed(2)}',
@@ -116,6 +204,25 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
+
+                    Text(
+                      'Booking Fee: RM${bookingFee.toStringAsFixed(2)}',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    Text(
+                      'Grand Total: RM${grandTotal.toStringAsFixed(2)}',
+                      textAlign: TextAlign.center,
+                      style: const TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue,
+                      ),
+                    ),
+
                     const SizedBox(height: 10),
                     Buttons(
                       text: 'Checkout now',
@@ -145,18 +252,34 @@ class ConfirmCarTile extends StatelessWidget {
   final int quantity;
   final DateTimeRange? bookingPeriod;
 
+  final TimeOfDay? startTime;
+  final TimeOfDay? endTime;
+
+
   const ConfirmCarTile({
     Key? key,
     required this.car,
     required this.quantity,
     required this.bookingPeriod,
+
+    required this.startTime,
+    required this.endTime,
+
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    double subtotal = bookingPeriod != null
-        ? car.price * quantity * bookingPeriod!.duration.inHours
-        : 0.0;
+
+    double subtotal = 0.0;
+    if (bookingPeriod != null && startTime != null && endTime != null) {
+      final durationHours =
+          (bookingPeriod!.end.difference(bookingPeriod!.start).inHours +
+                  endTime!.hour -
+                  startTime!.hour)
+              .toDouble();
+      subtotal = car.price * quantity * durationHours;
+    }
+
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
