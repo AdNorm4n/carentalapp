@@ -16,7 +16,7 @@ class ConfirmBookingPage extends StatefulWidget {
 }
 
 class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
-
+  
   DateTimeRange? bookingPeriod;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
@@ -36,7 +36,6 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
       });
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -82,10 +81,8 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                       car: cartItem.car,
                       quantity: cartItem.quantity,
                       bookingPeriod: bookingPeriod,
-
                       startTime: startTime,
                       endTime: endTime,
-
                     );
                   },
                 ),
@@ -105,9 +102,7 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
-
                     const SizedBox(height: 8),
-
                     ElevatedButton(
                       onPressed: () async {
                         final picked = await showDateRangePicker(
@@ -117,7 +112,6 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                           lastDate:
                               DateTime.now().add(const Duration(days: 365)),
                         );
-
                         if (picked != null) {
 
                           setState(() {
@@ -126,7 +120,6 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                         }
                       },
                       style: ElevatedButton.styleFrom(
-
                         padding: const EdgeInsets.symmetric(
                             vertical: 16, horizontal: 24),
                         backgroundColor:
@@ -134,7 +127,6 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(8),
                         ),
-
                       ),
                       child: Text(
                         bookingPeriod == null
@@ -147,7 +139,6 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 8),
                     ElevatedButton(
                       onPressed: () => _selectTime(context, true),
@@ -194,7 +185,6 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                         ),
                       ),
                     ),
-
                     const SizedBox(height: 50),
                     Text(
                       'Total Price: RM${totalPrice.toStringAsFixed(2)}',
@@ -204,7 +194,6 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                         fontWeight: FontWeight.bold,
                       ),
                     ),
-
                     Text(
                       'Booking Fee: RM${bookingFee.toStringAsFixed(2)}',
                       textAlign: TextAlign.center,
@@ -222,7 +211,6 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                         color: Colors.blue,
                       ),
                     ),
-
                     const SizedBox(height: 10),
                     Buttons(
                       text: 'Checkout now',
@@ -251,6 +239,8 @@ class ConfirmCarTile extends StatelessWidget {
   final Car car;
   final int quantity;
   final DateTimeRange? bookingPeriod;
+  final TimeOfDay? startTime;
+  final TimeOfDay? endTime;
 
   final TimeOfDay? startTime;
   final TimeOfDay? endTime;
@@ -264,12 +254,10 @@ class ConfirmCarTile extends StatelessWidget {
 
     required this.startTime,
     required this.endTime,
-
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     double subtotal = 0.0;
     if (bookingPeriod != null && startTime != null && endTime != null) {
       final durationHours =
@@ -279,7 +267,6 @@ class ConfirmCarTile extends StatelessWidget {
               .toDouble();
       subtotal = car.price * quantity * durationHours;
     }
-
 
     return Card(
       margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
