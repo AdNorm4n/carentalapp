@@ -4,14 +4,14 @@ import 'package:carentalapp/services/auth/database/firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-class DeliveryProgressPage extends StatefulWidget {
-  const DeliveryProgressPage({Key? key}) : super(key: key);
+class DoneBookingPage extends StatefulWidget {
+  const DoneBookingPage({Key? key}) : super(key: key);
 
   @override
-  State<DeliveryProgressPage> createState() => _DeliveryProgressPageState();
+  State<DoneBookingPage> createState() => _DoneBookingPageState();
 }
 
-class _DeliveryProgressPageState extends State<DeliveryProgressPage> {
+class _DoneBookingPageState extends State<DoneBookingPage> {
   late GoRent goRent;
   late FirestoreService db;
 
@@ -45,13 +45,13 @@ class _DeliveryProgressPageState extends State<DeliveryProgressPage> {
     return Container(
       height: 100,
       decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.secondary,
+        color: Theme.of(context).colorScheme.background,
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(40),
           topRight: Radius.circular(40),
         ),
       ),
-      padding: const EdgeInsets.all(25),
+      /*padding: const EdgeInsets.all(25),
       child: Row(
         children: [
           // profile picture of renter
@@ -117,7 +117,7 @@ class _DeliveryProgressPageState extends State<DeliveryProgressPage> {
             ],
           )
         ],
-      ),
+      ),*/
     );
   }
 }
