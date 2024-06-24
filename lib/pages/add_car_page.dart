@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:carentalapp/models/car.dart';
 import 'package:carentalapp/components/buttons.dart';
 import 'package:carentalapp/components/textfields.dart';
+import 'package:firebase_auth/firebase_auth.dart'; // Import FirebaseAuth for current user
 
 class AddCarPage extends StatefulWidget {
   @override
@@ -50,7 +51,8 @@ class _AddCarPageState extends State<AddCarPage> {
 
     try {
       final fileName = '${DateTime.now().millisecondsSinceEpoch}.jpg';
-      final storageRef = FirebaseStorage.instance.ref().child('car_images/$fileName');
+      final storageRef =
+          FirebaseStorage.instance.ref().child('car_images/$fileName');
       final uploadTask = storageRef.putFile(_imageFile!);
       final snapshot = await uploadTask.whenComplete(() => null);
 
@@ -79,6 +81,8 @@ class _AddCarPageState extends State<AddCarPage> {
         fuel: _fuel!,
         trans: _trans!,
         seater: _seater!,
+        ownerId: FirebaseAuth.instance.currentUser?.uid ??
+            '', // Assign current user as owner
       );
 
       try {
@@ -132,18 +136,15 @@ class _AddCarPageState extends State<AddCarPage> {
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-
                 const SizedBox(height: 10),
-
                 Form(
                   key: _formKey,
                   child: Column(
                     children: [
-
                       // car name field
                       Textfields(
-                        controller: _nameController, 
-                        hintText: 'Car Name', 
+                        controller: _nameController,
+                        hintText: 'Car Name',
                         obscureText: false,
                       ),
 
@@ -151,8 +152,8 @@ class _AddCarPageState extends State<AddCarPage> {
 
                       // car description field
                       Textfields(
-                        controller: _descriptionController, 
-                        hintText: 'Description', 
+                        controller: _descriptionController,
+                        hintText: 'Description',
                         obscureText: false,
                       ),
 
@@ -160,8 +161,8 @@ class _AddCarPageState extends State<AddCarPage> {
 
                       // car price field
                       Textfields(
-                        controller: _priceController, 
-                        hintText: 'Price per hour', 
+                        controller: _priceController,
+                        hintText: 'Price per hour',
                         obscureText: false,
                       ),
 
@@ -220,7 +221,7 @@ class _AddCarPageState extends State<AddCarPage> {
                           });
                         },
                       ),
-                      
+
                       const SizedBox(height: 10),
 
                       // Custom seater dropdown
@@ -241,20 +242,18 @@ class _AddCarPageState extends State<AddCarPage> {
                         child: Column(
                           children: [
                             _imageFile != null
-                              ? Image.file(
-                                  _imageFile!,
-                                  width: 350,
-                                  fit: BoxFit.cover,
-                                )
-                              : Container(
-                                  height: 100,
-                                  width: 150,
-                                  color: Colors.grey.withOpacity(0.3),
-                                  child: const Icon(Icons.image),
-                                ),
-
+                                ? Image.file(
+                                    _imageFile!,
+                                    width: 350,
+                                    fit: BoxFit.cover,
+                                  )
+                                : Container(
+                                    height: 100,
+                                    width: 150,
+                                    color: Colors.grey.withOpacity(0.3),
+                                    child: const Icon(Icons.image),
+                                  ),
                             const SizedBox(width: 10),
-
                             ElevatedButton(
                               onPressed: _pickImage,
                               child: const Text('Choose Car Image'),
@@ -271,7 +270,6 @@ class _AddCarPageState extends State<AddCarPage> {
                       ),
 
                       const SizedBox(height: 20),
-
                     ],
                   ),
                 ),

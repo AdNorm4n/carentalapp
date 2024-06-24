@@ -1,4 +1,4 @@
-// SPRINT 1
+// forgotpass_page.dart
 
 // ignore_for_file: use_super_parameters, library_private_types_in_public_api
 
@@ -87,19 +87,16 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-
               // message, enter email
-                Text(
-                  'Enter Your Email and we will send you a password reset link',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Theme.of(context).colorScheme.inversePrimary,
-                  ),
+              Text(
+                'Enter Your Email and we will send you a password reset link',
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Theme.of(context).colorScheme.inversePrimary,
                 ),
-             
+              ),
               const SizedBox(height: 25),
-
               Textfields(
                 controller: _emailController,
                 hintText: "Email",

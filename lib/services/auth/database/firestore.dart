@@ -1,16 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:carentalapp/models/go_rent.dart';
 
 class FirestoreService {
-
-  // get collection of bookings
-  final CollectionReference bookings = 
-      FirebaseFirestore.instance.collection('bookings');
-
-  // save order to db
-  Future<void> saveOrderToDatabase(String receipt) async {
-    await bookings.add({
-      'date': DateTime.now(),
-      'bookings': receipt,
-    });
+  Future<void> saveOrderToDatabase(GoRent goRent) async {
+    final collection = FirebaseFirestore.instance.collection('bookings');
+    final bookingDetails = goRent.getBookingDetails();
+    await collection.add(bookingDetails);
   }
 }
