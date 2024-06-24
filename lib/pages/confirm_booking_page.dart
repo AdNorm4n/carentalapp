@@ -16,7 +16,6 @@ class ConfirmBookingPage extends StatefulWidget {
 }
 
 class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
-  
   DateTimeRange? bookingPeriod;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
@@ -44,7 +43,6 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
         final userCart = gorent.cart;
 
         double totalPrice = userCart.fold(0.0, (sum, item) {
-
           if (bookingPeriod == null || startTime == null || endTime == null) {
             return sum;
           }
@@ -113,7 +111,6 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
                               DateTime.now().add(const Duration(days: 365)),
                         );
                         if (picked != null) {
-
                           setState(() {
                             bookingPeriod = picked;
                           });
@@ -242,16 +239,11 @@ class ConfirmCarTile extends StatelessWidget {
   final TimeOfDay? startTime;
   final TimeOfDay? endTime;
 
-  final TimeOfDay? startTime;
-  final TimeOfDay? endTime;
-
-
   const ConfirmCarTile({
     Key? key,
     required this.car,
     required this.quantity,
     required this.bookingPeriod,
-
     required this.startTime,
     required this.endTime,
   }) : super(key: key);
