@@ -132,7 +132,7 @@ class GoRent extends ChangeNotifier {
     receipt.writeln("Total: ${_formatPrice(getTotalBookingPrice())}");
     receipt.writeln("Booking Fee: ${_formatPrice(_bookingFee)}");
     receipt.writeln();
-
+    
     receipt.writeln("Delivery Location : $deliveryAddress");
 
     return receipt.toString();
@@ -147,6 +147,7 @@ class GoRent extends ChangeNotifier {
       return {
         'item': "${cartItem.quantity} x ${cartItem.car.name}",
         'subtotal': _formatPrice(cartItem.car.price),
+
         'total': _formatPrice(cartItem.car.price *
             cartItem.quantity *
             (_bookingPeriod!.end.difference(_bookingPeriod!.start).inHours +
@@ -161,6 +162,7 @@ class GoRent extends ChangeNotifier {
           "Here's your receipt. ${DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())}",
       'total_price': {
         'items': items,
+
         'total': _formatPrice(getTotalBookingPrice()),
       },
       'location': deliveryAddress,
