@@ -22,32 +22,51 @@ class DescriptionBox extends StatelessWidget {
           ),
           borderRadius: BorderRadius.circular(8),
         ),
-        padding: const EdgeInsets.all(25),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        padding: const EdgeInsets.only(
+          left: 25,
+          right: 25,
+          bottom: 25,
+          top: 15,
+        ),
+        child: Column(
           children: [
-            // booking fee for 1 car/receipt
-            Column(children: [
-              Text(
-                "\RM50.00",
-                style: myPrimaryTextStyle,
-              ),
-              Text(
-                "Booking fee (1 car)",
-                style: mySecondaryTextStyle,
-              ),
-            ]),
-
-            // booking fee for more than 1 car/receipt
-            Column(
+            // Centered title
+            Text(
+              "Booking fee rates",
+              style: myPrimaryTextStyle,
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+                height:
+                    20), // Add some spacing between the title and the rows below
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '\RM100.00',
-                  style: myPrimaryTextStyle,
+                // Booking fee for single car
+                Column(
+                  children: [
+                    Text(
+                      "RM50.00",
+                      style: myPrimaryTextStyle,
+                    ),
+                    Text(
+                      "Single car",
+                      style: mySecondaryTextStyle,
+                    ),
+                  ],
                 ),
-                Text(
-                  'Booking fee (multiple cars)',
-                  style: mySecondaryTextStyle,
+                // Booking fee for multiple cars
+                Column(
+                  children: [
+                    Text(
+                      'RM100.00',
+                      style: myPrimaryTextStyle,
+                    ),
+                    Text(
+                      'Multiple cars',
+                      style: mySecondaryTextStyle,
+                    ),
+                  ],
                 ),
               ],
             ),

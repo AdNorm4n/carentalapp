@@ -10,7 +10,7 @@ class GoRent extends ChangeNotifier {
   List<Car> _menu = [];
   final List<CartItem> _cart = [];
   String _deliveryAddress = '182G, Jln Beverly Heights 4';
-  double _bookingFee = 0.0; // New field for booking fee
+  double _bookingFee = 0.0;
 
   DateTimeRange? _bookingPeriod;
   TimeOfDay? _startTime;
@@ -23,7 +23,7 @@ class GoRent extends ChangeNotifier {
   List<Car> get menu => _menu;
   List<CartItem> get cart => _cart;
   String get deliveryAddress => _deliveryAddress;
-  double get bookingFee => _bookingFee; // Getter for booking fee
+  double get bookingFee => _bookingFee;
   DateTimeRange? get bookingPeriod => _bookingPeriod;
   TimeOfDay? get startTime => _startTime;
   TimeOfDay? get endTime => _endTime;
@@ -81,17 +81,14 @@ class GoRent extends ChangeNotifier {
                 .toDouble();
         total += cartItem.car.price * cartItem.quantity * durationHours;
       }
-      total += _bookingFee; // Include booking fee in total booking price
+      total += _bookingFee;
     }
     return total;
   }
 
-  // Method to calculate booking fee based on number of cars in cart
   void calculateBookingFee() {
     int numberOfCars = _cart.length;
-    _bookingFee = numberOfCars > 1
-        ? 100.0
-        : 50.0; // Cap booking fee at RM100 for more than 1 car
+    _bookingFee = numberOfCars > 1 ? 100.0 : 50.0;
     notifyListeners();
   }
 
@@ -110,7 +107,7 @@ class GoRent extends ChangeNotifier {
     _bookingPeriod = bookingPeriod;
     _startTime = startTime;
     _endTime = endTime;
-    calculateBookingFee(); // Update booking fee whenever booking details change
+    calculateBookingFee();
     notifyListeners();
   }
 
@@ -124,17 +121,16 @@ class GoRent extends ChangeNotifier {
 
     receipt.writeln(formattedDate);
     receipt.writeln();
-    receipt.writeln("-------"); // Add dashes here
+    receipt.writeln("-------");
 
     for (final cartItem in _cart) {
       receipt.writeln(
           "${cartItem.quantity} x ${cartItem.car.name} - ${_formatPrice(cartItem.car.price)}");
     }
 
-    receipt.writeln("-------"); // Add dashes here
+    receipt.writeln("-------");
     receipt.writeln("Total: ${_formatPrice(getTotalBookingPrice())}");
-    receipt.writeln(
-        "Booking Fee: ${_formatPrice(_bookingFee)}"); // Include booking fee in receipt
+    receipt.writeln("Booking Fee: ${_formatPrice(_bookingFee)}");
     receipt.writeln();
     
     receipt.writeln("Delivery Location : $deliveryAddress");
@@ -151,7 +147,7 @@ class GoRent extends ChangeNotifier {
       return {
         'item': "${cartItem.quantity} x ${cartItem.car.name}",
         'subtotal': _formatPrice(cartItem.car.price),
-        
+
         'total': _formatPrice(cartItem.car.price *
             cartItem.quantity *
             (_bookingPeriod!.end.difference(_bookingPeriod!.start).inHours +
@@ -166,14 +162,24 @@ class GoRent extends ChangeNotifier {
           "Here's your receipt. ${DateFormat('yyyy-MM-dd HH:mm:ss').format(DateTime.now())}",
       'total_price': {
         'items': items,
-        
+
         'total': _formatPrice(getTotalBookingPrice()),
       },
       'location': deliveryAddress,
-      'booking_fee':
-          _formatPrice(_bookingFee), // Include booking fee in booking details
-
+      'booking_fee': _formatPrice(_bookingFee),
+      'status': 'Active', // Default status for new bookings
+      'userId': FirebaseAuth.instance.currentUser?.uid ?? '',
     };
+  }
+
+  Future<void> createBooking() async {
+    final bookingDetails = getBookingDetails();
+    final bookingRef = await FirebaseFirestore.instance
+        .collection('bookings')
+        .add(bookingDetails);
+    bookingRef.update({'id': bookingRef.id}); // Store the document ID
+    clearCart();
+    notifyListeners();
   }
 
   void addCar(Car newCar) {
@@ -184,22 +190,19 @@ class GoRent extends ChangeNotifier {
         .collection('cars')
         .add(newCar.toMap())
         .then((docRef) {
-      newCar.id = docRef.id; // Update the car ID with the Firestore document ID
+      newCar.id = docRef.id;
 
-      // Update enum fields to their corresponding enum values
       newCar.category = CarCategory.values[newCar.category.index];
       newCar.features = CarFeatures.values[newCar.features.index];
       newCar.fuel = CarFuel.values[newCar.fuel.index];
       newCar.trans = CarTrans.values[newCar.trans.index];
       newCar.seater = CarSeater.values[newCar.seater.index];
 
-      // Update local menu and notify listeners
       _menu.add(newCar);
       notifyListeners();
     });
   }
 
-  // Method to remove a car by ID
   void removeCar(String carId) {
     FirebaseFirestore.instance.collection('cars').doc(carId).delete().then((_) {
       _menu.removeWhere((car) => car.id == carId);
@@ -207,7 +210,6 @@ class GoRent extends ChangeNotifier {
     });
   }
 
-  // Method to clear all cars owned by the current user
   void clearUserCars(String userId) {
     FirebaseFirestore.instance
         .collection('cars')
@@ -220,5 +222,50 @@ class GoRent extends ChangeNotifier {
       _menu.removeWhere((car) => car.ownerId == userId);
       notifyListeners();
     });
+  }
+
+  void updateBookingStatus(String bookingId, String status) {
+    FirebaseFirestore.instance.collection('bookings').doc(bookingId).update({
+      'status': status,
+    }).then((_) {
+      notifyListeners();
+    });
+  }
+
+  Stream<QuerySnapshot> getBookingsByStatus(String status) {
+    return FirebaseFirestore.instance
+        .collection('bookings')
+        .where('status', isEqualTo: status)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getBookingsByStatuses(List<String> statuses) {
+    return FirebaseFirestore.instance
+        .collection('bookings')
+        .where('status', whereIn: statuses)
+        .snapshots();
+  }
+
+  Stream<QuerySnapshot> getUserBookingsByStatuses(List<String> statuses) {
+    String userId = FirebaseAuth.instance.currentUser?.uid ?? '';
+    return FirebaseFirestore.instance
+        .collection('bookings')
+        .where('userId', isEqualTo: userId)
+        .where('status', whereIn: statuses)
+        .snapshots();
+  }
+
+  Future<void> endRide(DocumentSnapshot booking) async {
+    try {
+      await FirebaseFirestore.instance
+          .collection('bookings')
+          .doc(booking.id)
+          .update({
+        'status': 'Completed',
+      });
+      notifyListeners();
+    } catch (e) {
+      print("Failed to end ride: $e");
+    }
   }
 }

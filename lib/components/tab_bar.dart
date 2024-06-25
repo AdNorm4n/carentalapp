@@ -8,16 +8,15 @@ class HomeTabBar extends StatelessWidget {
   const HomeTabBar({
     super.key,
     required this.tabController,
-    });
-    
-    List<Tab> _buildCategoryTabs() {
-       return [
-       const Tab(text: 'Economy'),
-       const Tab(text: 'Sports'),
-       const Tab(text: 'Luxury'),
-      ];
-    }
+  });
 
+  List<Tab> _buildCategoryTabs() {
+    return [
+      const Tab(text: 'Economy'),
+      const Tab(text: 'Sports'),
+      const Tab(text: 'Luxury'),
+    ];
+  }
 
   @override
   Widget build(BuildContext context) {
