@@ -1,4 +1,7 @@
+import 'package:carentalapp/components/booking_history_list.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:carentalapp/models/go_rent.dart';
 import 'package:carentalapp/components/booking_tab_bar.dart';
 
 class BookingHistoryPage extends StatefulWidget {
@@ -10,6 +13,7 @@ class BookingHistoryPage extends StatefulWidget {
 
 class _BookingHistoryPageState extends State<BookingHistoryPage>
     with SingleTickerProviderStateMixin {
+  // tab bar controller
   late TabController _tabController;
 
   @override
@@ -24,56 +28,29 @@ class _BookingHistoryPageState extends State<BookingHistoryPage>
     super.dispose();
   }
 
-  /* List<Car> _filterBookingsByCategory(bool isUpcoming, List<Car> fullBookings) {
-    // Simulated filtering logic
-    return fullBookings.where((car) => car.isUpcoming == isUpcoming).toList();
-  }
-
-  List<Widget> getBookingsInThisCategory(List<Car> fullBookings) {
-    return [true, false].map((isUpcoming) {
-      List<Car> categoryBookings = _filterBookingsByCategory(isUpcoming, fullBookings);
-
-      return ListView.builder(
-        itemCount: categoryBookings.length,
-        physics: const NeverScrollableScrollPhysics(),
-        padding: EdgeInsets.zero,
-        itemBuilder: (context, index) {
-          final car = categoryBookings[index];
-          return CarTile(
-            car: car,
-            onTap: () => Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => CarPage(car: car),
-              ),
-            ),
-          );
-        },
-      );
-    }).toList();
-  }
-*/
   @override
   Widget build(BuildContext context) {
+    final goRent = Provider.of<GoRent>(context);
+
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.secondary,
       appBar: AppBar(
         title: const Text('Booking History'),
+        bottom: PreferredSize(
+          preferredSize: const Size.fromHeight(50.0),
+          child: BookingTabBar(tabController: _tabController),
+        ),
       ),
-      body: NestedScrollView(
-        headerSliverBuilder: (context, innerBoxIsScrolled) => [
-          SliverToBoxAdapter(
-            child: BookingTabBar(tabController: _tabController),
+      body: TabBarView(
+        controller: _tabController,
+        children: [
+          BookingHistoryList(
+            stream: goRent.getUserBookingsByStatuses(['Active']),
+          ),
+          BookingHistoryList(
+            stream: goRent.getUserBookingsByStatuses(['Completed']),
           ),
         ],
-        body: TabBarView(
-          controller: _tabController,
-          children: [
-            // Placeholder widgets for each tab
-            Center(child: Text('Active Bookings')),
-            Center(child: Text('Completed Bookings')),
-          ],
-        ),
       ),
     );
   }
