@@ -16,6 +16,7 @@ class ConfirmBookingPage extends StatefulWidget {
 }
 
 class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
+  
   DateTimeRange? bookingPeriod;
   TimeOfDay? startTime;
   TimeOfDay? endTime;
@@ -236,8 +237,6 @@ class ConfirmCarTile extends StatelessWidget {
   final Car car;
   final int quantity;
   final DateTimeRange? bookingPeriod;
-  final TimeOfDay? startTime;
-  final TimeOfDay? endTime;
 
   const ConfirmCarTile({
     Key? key,

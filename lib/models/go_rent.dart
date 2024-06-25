@@ -147,6 +147,7 @@ class GoRent extends ChangeNotifier {
       return {
         'item': "${cartItem.quantity} x ${cartItem.car.name}",
         'subtotal': _formatPrice(cartItem.car.price),
+        
         'total': _formatPrice(cartItem.car.price *
             cartItem.quantity *
             (_bookingPeriod!.end.difference(_bookingPeriod!.start).inHours +
