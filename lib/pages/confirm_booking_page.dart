@@ -36,6 +36,25 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
     }
   }
 
+  void _showErrorDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Incomplete Information'),
+          content:
+              const Text('Please select booking dates and times to proceed.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<GoRent>(
@@ -65,166 +84,166 @@ class _ConfirmBookingPageState extends State<ConfirmBookingPage> {
             backgroundColor: Colors.transparent,
             foregroundColor: Theme.of(context).colorScheme.inversePrimary,
           ),
-          body: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              CurrentLocation(),
-              Expanded(
-                child: ListView.builder(
-                  shrinkWrap: true,
-                  itemCount: userCart.length,
-                  itemBuilder: (context, index) {
-                    final cartItem = userCart[index];
-                    return ConfirmCarTile(
-                      car: cartItem.car,
-                      quantity: cartItem.quantity,
-                      bookingPeriod: bookingPeriod,
-                      startTime: startTime,
-                      endTime: endTime,
-                    );
-                  },
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    const SizedBox(height: 20),
-                    Text(
-                      'Select Booking Period',
-                      textAlign: TextAlign.center,
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 16.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  CurrentLocation(),
+                  ListView.builder(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    itemCount: userCart.length,
+                    itemBuilder: (context, index) {
+                      final cartItem = userCart[index];
+                      return ConfirmCarTile(
+                        car: cartItem.car,
+                        quantity: cartItem.quantity,
+                        bookingPeriod: bookingPeriod,
+                        startTime: startTime,
+                        endTime: endTime,
+                      );
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  Text(
+                    'Select Booking Period',
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: Theme.of(context).colorScheme.primary,
+                    ),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () async {
+                      final picked = await showDateRangePicker(
+                        context: context,
+                        firstDate: DateTime.now().add(const Duration(hours: 1)),
+                        lastDate: DateTime.now().add(const Duration(days: 365)),
+                      );
+                      if (picked != null) {
+                        setState(() {
+                          bookingPeriod = picked;
+                        });
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 24),
+                      backgroundColor:
+                          Theme.of(context).colorScheme.inversePrimary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      bookingPeriod == null
+                          ? 'Select Dates'
+                          : '${DateFormat.yMMMd().format(bookingPeriod!.start)} - ${DateFormat.yMMMd().format(bookingPeriod!.end)}',
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,
                         color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed: () async {
-                        final picked = await showDateRangePicker(
-                          context: context,
-                          firstDate:
-                              DateTime.now().add(const Duration(hours: 1)),
-                          lastDate:
-                              DateTime.now().add(const Duration(days: 365)),
-                        );
-                        if (picked != null) {
-                          setState(() {
-                            bookingPeriod = picked;
-                          });
-                        }
-                      },
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 24),
-                        backgroundColor:
-                            Theme.of(context).colorScheme.inversePrimary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: Text(
-                        bookingPeriod == null
-                            ? 'Select Dates'
-                            : '${DateFormat.yMMMd().format(bookingPeriod!.start)} - ${DateFormat.yMMMd().format(bookingPeriod!.end)}',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () => _selectTime(context, true),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 24),
+                      backgroundColor:
+                          Theme.of(context).colorScheme.inversePrimary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed: () => _selectTime(context, true),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 24),
-                        backgroundColor:
-                            Theme.of(context).colorScheme.inversePrimary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: Text(
-                        startTime == null
-                            ? 'Select Start Time'
-                            : 'Start Time: ${startTime!.format(context)}',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 8),
-                    ElevatedButton(
-                      onPressed: () => _selectTime(context, false),
-                      style: ElevatedButton.styleFrom(
-                        padding: const EdgeInsets.symmetric(
-                            vertical: 16, horizontal: 24),
-                        backgroundColor:
-                            Theme.of(context).colorScheme.inversePrimary,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
-                      ),
-                      child: Text(
-                        endTime == null
-                            ? 'Select End Time'
-                            : 'End Time: ${endTime!.format(context)}',
-                        style: TextStyle(
-                          fontSize: 16,
-                          fontWeight: FontWeight.bold,
-                          color: Theme.of(context).colorScheme.primary,
-                        ),
-                      ),
-                    ),
-                    const SizedBox(height: 50),
-                    Text(
-                      'Total Price: RM${totalPrice.toStringAsFixed(2)}',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 20,
+                    child: Text(
+                      startTime == null
+                          ? 'Select Start Time'
+                          : 'Start Time: ${startTime!.format(context)}',
+                      style: TextStyle(
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
-                    Text(
-                      'Booking Fee: RM${bookingFee.toStringAsFixed(2)}',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 20,
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () => _selectTime(context, false),
+                    style: ElevatedButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(
+                          vertical: 16, horizontal: 24),
+                      backgroundColor:
+                          Theme.of(context).colorScheme.inversePrimary,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: Text(
+                      endTime == null
+                          ? 'Select End Time'
+                          : 'End Time: ${endTime!.format(context)}',
+                      style: TextStyle(
+                        fontSize: 16,
                         fontWeight: FontWeight.bold,
+                        color: Theme.of(context).colorScheme.primary,
                       ),
                     ),
-                    Text(
-                      'Grand Total: RM${grandTotal.toStringAsFixed(2)}',
-                      textAlign: TextAlign.center,
-                      style: const TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue,
-                      ),
+                  ),
+                  const SizedBox(height: 50),
+                  Text(
+                    'Total Price: RM${totalPrice.toStringAsFixed(2)}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
                     ),
-                    const SizedBox(height: 10),
-                    Buttons(
-                      text: 'Checkout now',
-                      onTap: () {
+                  ),
+                  Text(
+                    'Booking Fee: RM${bookingFee.toStringAsFixed(2)}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  Text(
+                    'Grand Total: RM${grandTotal.toStringAsFixed(2)}',
+                    textAlign: TextAlign.center,
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Buttons(
+                    text: 'Checkout now',
+                    onTap: () {
+                      if (bookingPeriod == null ||
+                          startTime == null ||
+                          endTime == null) {
+                        _showErrorDialog(context);
+                      } else {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
                             builder: (context) => const PaymentPage(),
                           ),
                         );
-                      },
-                    ),
-                    const SizedBox(height: 25),
-                  ],
-                ),
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 25),
+                ],
               ),
-            ],
+            ),
           ),
         );
       },
@@ -236,16 +255,16 @@ class ConfirmCarTile extends StatelessWidget {
   final Car car;
   final int quantity;
   final DateTimeRange? bookingPeriod;
-  final TimeOfDay? startTime; // Add this line
-  final TimeOfDay? endTime; // Add this line
+  final TimeOfDay? startTime;
+  final TimeOfDay? endTime;
 
   const ConfirmCarTile({
     Key? key,
     required this.car,
     required this.quantity,
     required this.bookingPeriod,
-    required this.startTime, // Add this line
-    required this.endTime, // Add this line
+    required this.startTime,
+    required this.endTime,
   }) : super(key: key);
 
   @override
