@@ -94,23 +94,23 @@ class _CarPageState extends State<CarPage> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Category: ${widget.car.category.toString().split('.').last}',
+                        'Category: ${widget.car.getCategory()}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        'Feature: ${widget.car.features.toString().split('.').last}',
+                        'Feature: ${widget.car.getFeatures()}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        'Fuel: ${widget.car.fuel.toString().split('.').last}',
+                        'Fuel: ${widget.car.getFuel()}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        'Transmission: ${widget.car.trans.toString().split('.').last}',
+                        'Transmission: ${widget.car.getTrans()}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       Text(
-                        'Seater: ${widget.car.seater.toString().split('.').last}',
+                        'Seater: ${widget.car.getSeater()}',
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                     ],

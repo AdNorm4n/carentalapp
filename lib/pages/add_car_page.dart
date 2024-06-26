@@ -162,7 +162,7 @@ class _AddCarPageState extends State<AddCarPage> {
                       // car price field
                       Textfields(
                         controller: _priceController,
-                        hintText: 'Price per hour',
+                        hintText: 'Price/hour',
                         obscureText: false,
                       ),
 

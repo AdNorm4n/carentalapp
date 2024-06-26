@@ -21,7 +21,7 @@ class Car {
   CarFuel fuel;
   CarTrans trans;
   CarSeater seater;
-  String ownerId; // Owner ID
+  String ownerId;
 
   Car({
     required this.id,
@@ -34,7 +34,7 @@ class Car {
     required this.fuel,
     required this.trans,
     required this.seater,
-    required this.ownerId, // Initialize owner ID in constructor
+    required this.ownerId,
   });
 
   factory Car.fromFirestore(DocumentSnapshot doc) {
@@ -51,7 +51,7 @@ class Car {
       fuel: CarFuel.values[data['fuel'] ?? 0],
       trans: CarTrans.values[data['trans'] ?? 0],
       seater: CarSeater.values[data['seater'] ?? 0],
-      ownerId: data['ownerId'] ?? '', // Assign ownerId from Firestore data
+      ownerId: data['ownerId'] ?? '',
     );
   }
 
@@ -66,7 +66,15 @@ class Car {
       'fuel': fuel.index,
       'trans': trans.index,
       'seater': seater.index,
-      'ownerId': ownerId, // Include ownerId in the map
+      'ownerId': ownerId,
     };
   }
+
+  String getCategory() => _capitalize(category.toString().split('.').last);
+  String getFeatures() => _capitalize(features.toString().split('.').last);
+  String getFuel() => _capitalize(fuel.toString().split('.').last);
+  String getTrans() => _capitalize(trans.toString().split('.').last);
+  String getSeater() => _capitalize(seater.toString().split('.').last);
+
+  String _capitalize(String s) => s[0].toUpperCase() + s.substring(1);
 }

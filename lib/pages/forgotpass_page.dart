@@ -89,7 +89,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
             children: [
               // message, enter email
               Text(
-                'Enter Your Email and we will send you a password reset link',
+                'Enter your email and we will send you a password reset link',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   fontSize: 16,
@@ -104,7 +104,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
               ),
               const SizedBox(height: 20),
               Buttons(
-                text: "Forgot Password",
+                text: "Send now",
                 onTap: _sendPasswordResetEmail,
               ),
             ],

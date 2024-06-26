@@ -1,5 +1,3 @@
-// drawer.dart
-
 import 'package:carentalapp/pages/booking_history_page.dart';
 import 'package:carentalapp/pages/renter_page.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +20,34 @@ class ListDrawer extends StatelessWidget {
         SnackBar(content: Text('Failed to log out: $e')),
       );
     }
+  }
+
+  Future<bool> isRenter() async {
+    final authService = AuthService();
+    final user = authService.getCurrentUser();
+    if (user != null) {
+      String role = await authService.getUserRole(user.uid);
+      return role == 'Renter';
+    }
+    return false;
+  }
+
+  void _showFeatureUnavailableDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          title: const Text('Feature Unavailable'),
+          content: const Text('Please sign up and join us as a Renter today!'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text('OK'),
+            ),
+          ],
+        );
+      },
+    );
   }
 
   @override
@@ -88,14 +114,20 @@ class ListDrawer extends StatelessWidget {
           DrawerTile(
             text: "R E N T E R",
             icon: Icons.car_rental,
-            onTap: () {
-              Navigator.pop(context);
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => RenterPage(),
-                ),
-              );
+            onTap: () async {
+              bool renter = await isRenter();
+              if (renter) {
+                Navigator.pop(context);
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => RenterPage(),
+                  ),
+                );
+              } else {
+                Navigator.pop(context);
+                _showFeatureUnavailableDialog(context);
+              }
             },
           ),
           DrawerTile(

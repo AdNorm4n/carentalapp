@@ -58,7 +58,7 @@ class _CurrentLocationState extends State<CurrentLocation> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Pick location",
+            "My Location",
             style: TextStyle(color: Theme.of(context).colorScheme.primary),
           ),
           GestureDetector(

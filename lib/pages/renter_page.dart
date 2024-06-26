@@ -1,3 +1,4 @@
+import 'package:carentalapp/pages/home_page.dart';
 import 'package:flutter/material.dart';
 import 'package:carentalapp/components/buttons.dart';
 import 'package:carentalapp/pages/manage_car_page.dart'; // Import your manage car page
@@ -20,10 +21,11 @@ class RenterPage extends StatelessWidget {
               children: [
                 const SizedBox(height: 10),
                 Text(
-                  'This is the renter page',
+                  'Welcome Renter! Rent out your cars today',
+                  textAlign: TextAlign.center,
                   style: TextStyle(
-                    fontSize: 20,
-                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                    color: Theme.of(context).colorScheme.inversePrimary,
                   ),
                 ),
                 SizedBox(height: 20),
@@ -45,11 +47,16 @@ class RenterPage extends StatelessWidget {
                   },
                 ),
                 SizedBox(height: 20),
-                ElevatedButton(
+                IconButton(
+                  icon: const Icon(Icons.home),
                   onPressed: () {
-                    Navigator.pushReplacementNamed(context, '/home_page');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => const HomePage(),
+                      ),
+                    );
                   },
-                  child: Text('Go Home'),
                 ),
               ],
             ),

@@ -153,6 +153,7 @@ class GoRent extends ChangeNotifier {
                     _endTime!.hour -
                     _startTime!.hour)
                 .toDouble()),
+        'car_image_url': cartItem.car.imageUrl,
       };
     }).toList();
 
